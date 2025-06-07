@@ -1,0 +1,10 @@
+[project]
+name = "vodafone-station-cli"
+version = "0.1.0"
+description = "CLI for interacting with a Vodafone Station"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiovodafone",
+    "rich>=14.0.0",
+]
