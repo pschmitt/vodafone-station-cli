@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.scripts]
-vodafone-station-cli = "vodafone-station-cli:cli"
+vodafone-station-cli = "cli:cli"
 
 [project.urls]
 homepage = "https://github.com/pschmitt/vodafone-station-cli"
