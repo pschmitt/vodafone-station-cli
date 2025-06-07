@@ -3,8 +3,19 @@ name = "vodafone-station-cli"
 version = "0.1.0"
 description = "CLI for interacting with a Vodafone Station"
 readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Philipp Schmitt", email = "philipp@schmitt.co"},
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+]
+keywords = ["voadafone", "vodafone-station"]
 requires-python = ">=3.13"
 dependencies = [
     "aiovodafone",
     "rich>=14.0.0",
 ]
+
+[project.scripts]
+vodafone-station-cli = "vodafone-station-cli:cli"
