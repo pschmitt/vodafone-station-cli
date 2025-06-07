@@ -91,7 +91,9 @@ def parse_args() -> Namespace:
     subparsers = parser.add_subparsers(dest="ACTION", required=True)
 
     # Info (no additional arguments)
-    info_parser = subparsers.add_parser("info", help="Retrieve router information")
+    info_parser = subparsers.add_parser(
+        "info", help="Retrieve router information"
+    )
     info_parser.add_argument(
         "info_type",
         nargs="?",  # Allows zero or one argument
@@ -100,7 +102,9 @@ def parse_args() -> Namespace:
     )
 
     # LED control
-    led_parser = subparsers.add_parser("led", aliases=["l", "leds"], help="LED control")
+    led_parser = subparsers.add_parser(
+        "led", aliases=["l", "leds"], help="LED control"
+    )
     led_parser.add_argument("STATE", choices=["on", "off"], help="LED state")
 
     # Restart
@@ -109,19 +113,29 @@ def parse_args() -> Namespace:
     # Ping
     ping_parser = subparsers.add_parser("ping", help="Ping a target")
     ping_parser.add_argument("TARGET", type=str, help="IP address to ping")
-    ping_parser.add_argument("--count", type=int, default=1, help="Number of pings")
-    ping_parser.add_argument("--size", type=int, default=56, help="Ping packet size")
+    ping_parser.add_argument(
+        "--count", type=int, default=1, help="Number of pings"
+    )
+    ping_parser.add_argument(
+        "--size", type=int, default=56, help="Ping packet size"
+    )
     ping_parser.add_argument(
         "--interval",
         type=int,
         default=1000,
         help="Ping interval in milliseconds",
     )
-    ping_parser.add_argument("--retries", type=int, default=15, help="Retry count")
+    ping_parser.add_argument(
+        "--retries", type=int, default=15, help="Retry count"
+    )
 
     # Traceroute
-    traceroute_parser = subparsers.add_parser("traceroute", help="Perform a traceroute")
-    traceroute_parser.add_argument("TARGET", type=str, help="IP address to traceroute")
+    traceroute_parser = subparsers.add_parser(
+        "traceroute", help="Perform a traceroute"
+    )
+    traceroute_parser.add_argument(
+        "TARGET", type=str, help="IP address to traceroute"
+    )
     traceroute_parser.add_argument(
         "--count",
         type=int,
@@ -158,7 +172,9 @@ def parse_args() -> Namespace:
         default="A",
         help="DNS record type",
     )
-    dns_parser.add_argument("--retries", type=int, default=15, help="Retry count")
+    dns_parser.add_argument(
+        "--retries", type=int, default=15, help="Retry count"
+    )
 
     arguments = parser.parse_args()
     # Re-parse the command line with the JSON config if provided
@@ -219,8 +235,12 @@ async def gather_info_data(
             for channel, values in docsis_data.get(which, {}).items():
                 data["docsis"][which][channel] = {
                     "channel_type": values.get("channel_type", "N/A"),
-                    "channel_frequency": values.get("channel_frequency", "N/A"),
-                    "channel_modulation": values.get("channel_modulation", "N/A"),
+                    "channel_frequency": values.get(
+                        "channel_frequency", "N/A"
+                    ),
+                    "channel_modulation": values.get(
+                        "channel_modulation", "N/A"
+                    ),
                     "channel_power": values.get("channel_power", "N/A"),
                     "channel_locked": values.get("channel_locked", "N/A"),
                 }
@@ -258,14 +278,20 @@ async def display_device_info(
         table.add_column("Value", style="white")
 
         table.add_row("Serial #", sensor_data.get("sys_serial_number", "N/A"))
-        table.add_row("Firmware", sensor_data.get("sys_firmware_version", "N/A"))
-        table.add_row("Hardware", sensor_data.get("sys_hardware_version", "N/A"))
+        table.add_row(
+            "Firmware", sensor_data.get("sys_firmware_version", "N/A")
+        )
+        table.add_row(
+            "Hardware", sensor_data.get("sys_hardware_version", "N/A")
+        )
         table.add_row(
             "Uptime",
             str(api.convert_uptime(sensor_data.get("sys_uptime", 0))),
         )
         table.add_row("WAN status", sensor_data.get("wan_status", "N/A"))
-        table.add_row("Cable modem status", sensor_data.get("cm_status", "N/A"))
+        table.add_row(
+            "Cable modem status", sensor_data.get("cm_status", "N/A")
+        )
         table.add_row("LAN mode", sensor_data.get("lan_mode", "N/A"))
 
         console.print(table)
@@ -294,7 +320,9 @@ async def display_device_info(
                     expand=False,
                 ),
             )
-            docis_table = Table(title=f"{which.capitalize()} Channels", box=box.SIMPLE)
+            docis_table = Table(
+                title=f"{which.capitalize()} Channels", box=box.SIMPLE
+            )
             docis_table.add_column("Channel", style="cyan")
             docis_table.add_column("Type", style="green")
             docis_table.add_column("Frequency", style="yellow")
@@ -397,7 +425,9 @@ async def connect(
             hostname, username, password, session=session
         )
     elif device_type == DeviceType.SERCOMM:
-        api = VodafoneStationSercommApi(hostname, username, password, session=session)
+        api = VodafoneStationSercommApi(
+            hostname, username, password, session=session
+        )
     else:
         LOGGER.error("The device is not a supported Vodafone Station.")
         sys.exit(1)
@@ -406,7 +436,9 @@ async def connect(
         try:
             await api.login(force_logout=force)
         except ModelNotSupported:
-            LOGGER.exception("Model is not supported yet for router %s", api.host)
+            LOGGER.exception(
+                "Model is not supported yet for router %s", api.host
+            )
             raise
         except CannotAuthenticate:
             LOGGER.exception("Cannot authenticate to router %s", api.host)
