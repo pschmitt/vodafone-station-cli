@@ -508,7 +508,8 @@ async def main() -> None:
         LOGGER.error("Unknown action: %s", args.ACTION)
         rc = 2
 
-    # For commands that return a 'res' with 'data', we still print JSON unconditionally.
+    # For commands that return a 'res' with 'data', we still print
+    # JSON unconditionally.
     if res:
         print_json(json.dumps(res.get("data")))
 
