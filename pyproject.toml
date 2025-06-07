@@ -13,9 +13,15 @@ classifiers = [
 keywords = ["voadafone", "vodafone-station"]
 requires-python = ">=3.13"
 dependencies = [
-    "aiovodafone",
+    "aiovodafone>=1.1.0",
     "rich>=14.0.0",
 ]
 
 [project.scripts]
 vodafone-station-cli = "vodafone-station-cli:cli"
+
+[project.urls]
+homepage = "https://github.com/pschmitt/vodafone-station-cli"
+documentation = "https://github.com/pschmitt/vodafone-station-cli/blob/head/readme.md"
+repository = "https://github.com/pschmitt/vodafone-station-cli"
+issues = "https://github.com/pschmitt/vodafone-station-cli/issues"
