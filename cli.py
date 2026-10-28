@@ -16,12 +16,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from aiovodafone.api import (
-    VodafoneStationCommonApi,
-    VodafoneStationSercommApi,
-    VodafoneStationTechnicolorApi,
-)
-from aiovodafone.const import DeviceType
+from aiovodafone.api import VodafoneStationCommonApi
 from aiovodafone.exceptions import (
     AlreadyLogged,
     CannotAuthenticate,
@@ -29,6 +24,11 @@ from aiovodafone.exceptions import (
     GenericLoginError,
     ModelNotSupported,
     VodafoneError,
+)
+from aiovodafone.models import (
+    VodafoneStationTechnicolorApi,
+    get_device_type,
+    init_device_class,
 )
 
 console = Console()
@@ -415,48 +415,41 @@ async def connect(
     """Connect to the router and return the api client."""
     jar = CookieJar(unsafe=True)
     session = ClientSession(cookie_jar=jar)
-    device_type = await VodafoneStationCommonApi.get_device_type(
-        hostname,
+    device_type, url = await get_device_type(hostname, session)
+    api: VodafoneStationCommonApi = init_device_class(
+        url,
+        device_type,
+        {"username": username, "password": password},
         session,
     )
-    api: VodafoneStationCommonApi
-    if device_type == DeviceType.TECHNICOLOR:
-        api = VodafoneStationTechnicolorApi(
-            hostname, username, password, session=session
-        )
-    elif device_type == DeviceType.SERCOMM:
-        api = VodafoneStationSercommApi(
-            hostname, username, password, session=session
-        )
-    else:
-        LOGGER.error("The device is not a supported Vodafone Station.")
-        sys.exit(1)
 
     try:
         try:
             await api.login(force_logout=force)
         except ModelNotSupported:
             LOGGER.exception(
-                "Model is not supported yet for router %s", api.host
+                "Model is not supported yet for router %s", api.base_url.host
             )
             raise
         except CannotAuthenticate:
-            LOGGER.exception("Cannot authenticate to router %s", api.host)
+            LOGGER.exception(
+                "Cannot authenticate to router %s", api.base_url.host
+            )
             raise
         except CannotConnect:
-            LOGGER.exception("Cannot connect to router %s", api.host)
+            LOGGER.exception("Cannot connect to router %s", api.base_url.host)
             raise
         except AlreadyLogged:
             LOGGER.exception(
                 "Only one user at a time can connect to router %s",
-                api.host,
+                api.base_url.host,
             )
             raise
         except GenericLoginError:
-            LOGGER.exception("Unable to login to router %s", api.host)
+            LOGGER.exception("Unable to login to router %s", api.base_url.host)
             raise
     except VodafoneError:
-        await api.close()
+        await api.session.close()
         sys.exit(1)
 
     return api
@@ -515,7 +508,7 @@ async def main() -> None:
 
     LOGGER.debug("Logout & close session")
     await api.logout()
-    await api.close()
+    await api.session.close()
     sys.exit(rc)
 
 
