@@ -25,7 +25,11 @@ from aiovodafone.exceptions import (
     ModelNotSupported,
     VodafoneError,
 )
-from aiovodafone.models import get_device_type, init_device_class
+from aiovodafone.models import (
+    VodafoneStationTechnicolorApi,
+    get_device_type,
+    init_device_class,
+)
 
 console = Console()
 LOGGER = logging.getLogger(__name__)
