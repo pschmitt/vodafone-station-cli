@@ -6,15 +6,8 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      flake-utils,
-      ...
-    }:
-    flake-utils.lib.eachDefaultSystem (
-      system:
+  outputs = { self, nixpkgs, flake-utils, ... }:
+    flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
         python = pkgs.python3;
@@ -53,10 +46,7 @@
           version = "0.1.0";
           pyproject = true;
           src = ./.;
-          propagatedBuildInputs = with pythonPkgs; [
-            rich
-            aiovodafone
-          ];
+          propagatedBuildInputs = with pythonPkgs; [ rich aiovodafone ];
           meta = with pkgs.lib; {
             description = "CLI for interacting with Vodafone Station devices";
             homepage = "https://github.com/pschmitt/vodafone-station-cli";
@@ -70,11 +60,7 @@
         devShell = pkgs.mkShell {
           name = "vodafone-station-cli-devshell";
 
-          buildInputs = [
-            python
-            pythonPkgs.rich
-            aiovodafone
-          ];
+          buildInputs = [ python pythonPkgs.rich aiovodafone ];
 
           nativeBuildInputs = [
             pkgs.gh # GitHub CLI
@@ -90,11 +76,9 @@
             echo -e "\e[34mWelcome to the vodafoneStationCli development shell!\e[0m"
           '';
         };
-      in
-      {
+      in {
         packages.vodafone-station-cli = vodafoneStationCliPkg;
         defaultPackage = vodafoneStationCliPkg;
         devShells.default = devShell;
-      }
-    );
+      });
 }
