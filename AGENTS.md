@@ -10,3 +10,10 @@
 - Before changing workflows, check for reusable workflows or actions in
   [ci-workflows](https://github.com/pschmitt/ci-workflows) and preserve
   existing triggers, parameters, and check coverage.
+- Keep `packages.default` canonical and retain the named
+  `vodafone-station-cli` package output; do not add the legacy `defaultPackage`
+  alias. Run Nix evaluation and builds on an `rworker`, never locally.
+- The Python dev shell should inherit app dependencies with `inputsFrom` and
+  include the checkout in `PYTHONPATH` for direct source imports.
+- The pinned `aiovodafone` 1.1.0 package lacks `aiovodafone.models`, so the
+  baseline and candidate CLI imports fail; do not claim all-platform builds.

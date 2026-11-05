@@ -6,11 +6,12 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    { nixpkgs, flake-utils, ... }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        python = pkgs.python3;
         pythonPkgs = pkgs.python3Packages;
 
         aiovodafone = pythonPkgs.buildPythonPackage {
@@ -46,7 +47,10 @@
           version = "0.1.0";
           pyproject = true;
           src = ./.;
-          propagatedBuildInputs = with pythonPkgs; [ rich aiovodafone ];
+          propagatedBuildInputs = with pythonPkgs; [
+            rich
+            aiovodafone
+          ];
           meta = with pkgs.lib; {
             description = "CLI for interacting with Vodafone Station devices";
             homepage = "https://github.com/pschmitt/vodafone-station-cli";
@@ -60,7 +64,7 @@
         devShell = pkgs.mkShell {
           name = "vodafone-station-cli-devshell";
 
-          buildInputs = [ python pythonPkgs.rich aiovodafone ];
+          inputsFrom = [ vodafoneStationCliPkg ];
 
           nativeBuildInputs = [
             pkgs.gh # GitHub CLI
@@ -70,15 +74,15 @@
           ];
 
           shellHook = ''
-            export PYTHONPATH=${
-              self.packages.${system}.vodafone-station-cli
-            }/lib/python${python.version}/site-packages
+            export PYTHONPATH="$PWD''${PYTHONPATH:+:$PYTHONPATH}"
             echo -e "\e[34mWelcome to the vodafoneStationCli development shell!\e[0m"
           '';
         };
-      in {
+      in
+      {
         packages.vodafone-station-cli = vodafoneStationCliPkg;
-        defaultPackage = vodafoneStationCliPkg;
+        packages.default = vodafoneStationCliPkg;
         devShells.default = devShell;
-      });
+      }
+    );
 }
