@@ -15,5 +15,7 @@
   alias. Run Nix evaluation and builds on an `rworker`, never locally.
 - The Python dev shell should inherit app dependencies with `inputsFrom` and
   include the checkout in `PYTHONPATH` for direct source imports.
-- The pinned `aiovodafone` 1.1.0 package lacks `aiovodafone.models`, so the
-  baseline and candidate CLI imports fail; do not claim all-platform builds.
+- The Nix package uses `aiovodafone` 3.3.0, compatible with the maintained
+  Nixpkgs 26.05 package set (which also supports Intel macOS). The Python lock
+  may resolve a newer compatible release. Preserve dependency-version checks
+  and validate against consumer Nixpkgs overrides as well as this flake's pin.

@@ -2,25 +2,29 @@
   description = "CLI for interacting with Vodafone Station devices";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Keep Intel macOS supported alongside the other default systems.
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { nixpkgs, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    { nixpkgs, flake-utils, ... }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
         pythonPkgs = pkgs.python3Packages;
 
         aiovodafone = pythonPkgs.buildPythonPackage {
           pname = "aiovodafone";
-          version = "3.3.10";
+          # Later releases require Python dependencies newer than this package
+          # set. Keep their version checks enabled rather than relaxing them.
+          version = "3.3.0";
           format = "wheel";
 
           src = pkgs.fetchurl {
-            url =
-              "https://files.pythonhosted.org/packages/1e/43/aaa4ad50fe2928c5ff4a85397019ad875c766f4f02ade9a11765009e4dd8/aiovodafone-3.3.10-py3-none-any.whl";
-            hash = "sha256-85g5rT4le+q8zjY8R+iAzo147ALXwcD1KifEAOwOMiE=";
+            url = "https://files.pythonhosted.org/packages/a5/c8/e417a60be466c85ee97aa0335c2f480a2fcaf382c386f182c584da28e2d8/aiovodafone-3.3.0-py3-none-any.whl";
+            hash = "sha256-JdmGD1vTMjfLVDVg63a9W1SDuJvsURNHo9b6AhPuMzw=";
           };
           propagatedBuildInputs = with pythonPkgs; [
             # deps
@@ -43,8 +47,14 @@
           version = "0.1.0";
           pyproject = true;
           src = ./.;
-          nativeBuildInputs = with pythonPkgs; [ setuptools wheel ];
-          propagatedBuildInputs = with pythonPkgs; [ rich aiovodafone ];
+          nativeBuildInputs = with pythonPkgs; [
+            setuptools
+            wheel
+          ];
+          propagatedBuildInputs = with pythonPkgs; [
+            rich
+            aiovodafone
+          ];
           pythonImportsCheck = [ "cli" ];
           installCheckPhase = ''
             cd "$src"
@@ -77,9 +87,11 @@
             echo -e "\e[34mWelcome to the vodafoneStationCli development shell!\e[0m"
           '';
         };
-      in {
+      in
+      {
         packages.vodafone-station-cli = vodafoneStationCliPkg;
         packages.default = vodafoneStationCliPkg;
         devShells.default = devShell;
-      });
+      }
+    );
 }
