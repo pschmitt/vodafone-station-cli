@@ -14,29 +14,27 @@
 
         aiovodafone = pythonPkgs.buildPythonPackage {
           pname = "aiovodafone";
-          version = "1.1.0";
-          pyproject = true;
+          version = "3.3.10";
+          format = "wheel";
 
-          src = pkgs.fetchPypi {
-            pname = "aiovodafone";
-            version = "1.1.0";
-            sha256 = "sha256-hQznCBW03vNVOzvViWuXrLQ9MFE5blvLMdQHyc8JJ84=";
+          src = pkgs.fetchurl {
+            url =
+              "https://files.pythonhosted.org/packages/1e/43/aaa4ad50fe2928c5ff4a85397019ad875c766f4f02ade9a11765009e4dd8/aiovodafone-3.3.10-py3-none-any.whl";
+            hash = "sha256-85g5rT4le+q8zjY8R+iAzo147ALXwcD1KifEAOwOMiE=";
           };
           propagatedBuildInputs = with pythonPkgs; [
-            # build
-            poetry-core
-            setuptools
-            wheel
-
             # deps
             aiohttp
             beautifulsoup4
+            orjson
+            pycryptodome
+            segno
           ];
-          meta = with pkgs.lib; {
+          meta = {
             description = "Async client for Vodafone Station devices";
             homepage = "https://pypi.org/project/aiovodafone/";
-            license = licenses.mit;
-            maintainers = [ maintainers.pschmitt ];
+            license = pkgs.lib.licenses.asl20;
+            maintainers = [ pkgs.lib.maintainers.pschmitt ];
           };
         };
 
@@ -45,13 +43,19 @@
           version = "0.1.0";
           pyproject = true;
           src = ./.;
+          nativeBuildInputs = with pythonPkgs; [ setuptools wheel ];
           propagatedBuildInputs = with pythonPkgs; [ rich aiovodafone ];
-          meta = with pkgs.lib; {
+          pythonImportsCheck = [ "cli" ];
+          installCheckPhase = ''
+            cd "$src"
+            python -m unittest discover -s tests -v
+          '';
+          meta = {
             description = "CLI for interacting with Vodafone Station devices";
             homepage = "https://github.com/pschmitt/vodafone-station-cli";
-            license = licenses.gpl3Only;
-            maintainers = [ maintainers.pschmitt ];
-            platforms = platforms.all;
+            license = pkgs.lib.licenses.gpl3Only;
+            maintainers = [ pkgs.lib.maintainers.pschmitt ];
+            platforms = pkgs.lib.platforms.all;
           };
         };
 

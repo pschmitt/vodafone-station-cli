@@ -13,7 +13,7 @@ classifiers = [
 keywords = ["voadafone", "vodafone-station"]
 requires-python = ">=3.12"
 dependencies = [
-    "aiovodafone>=1.1.0",
+    "aiovodafone>=3.3.10",
     "rich>=14.0.0",
 ]
 

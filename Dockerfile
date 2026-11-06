@@ -3,7 +3,7 @@ FROM python:3.15-alpine
 COPY . /app
 
 # hadolint ignore=DL3018
-RUN apk add --virtual deps --no-cache gcc musl-dev && \
+RUN apk add --virtual deps --no-cache gcc musl-dev cargo rust && \
     pip install --no-cache-dir /app && \
     apk del deps
 
