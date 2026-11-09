@@ -168,7 +168,7 @@ wheels = [
 
 [[package]]
 name = "aiovodafone"
-version = "3.3.10"
+version = "3.3.11"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -177,9 +177,9 @@ dependencies = [
     { name = "pycryptodome" },
     { name = "segno" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/75/65/e2c04a34dde0c329a7a63f5669f8d18bfbf79be614999e6eed7db77d526b/aiovodafone-3.3.10.tar.gz", hash = "sha256:b0c9277607530d96045c69483706b742eb121eed9ba929858fe60c5c65de7469", size = 50448, upload-time = "2026-10-25T19:10:41.51Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/88/59/b2e4f004cf69c1fc0d12f41c9589ce509de3db0ac65c979d489b372bf817/aiovodafone-3.3.11.tar.gz", hash = "sha256:76452e48fb87c28bb6ce5df56d3c3250e0b69efffb0748998af251f8335ee494", size = 50633, upload-time = "2026-11-02T11:15:15.805Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1e/43/aaa4ad50fe2928c5ff4a85397019ad875c766f4f02ade9a11765009e4dd8/aiovodafone-3.3.10-py3-none-any.whl", hash = "sha256:f39839ad3e257beabcce363c47e880ce8d78ec02d7c1c0f52a27c400ec0e3221", size = 34683, upload-time = "2026-10-25T19:10:40.106Z" },
+    { url = "https://files.pythonhosted.org/packages/16/ba/221ecf1e46b280115c08b48737c6f4a60131bae0eb3e9df3f9ac232a3f5c/aiovodafone-3.3.11-py3-none-any.whl", hash = "sha256:cdbeb4ee3e08dda4c9876d381baba2ac9fb208518a70f41440b420f9cda5c3de", size = 34696, upload-time = "2026-11-02T11:15:14.438Z" },
 ]
 
 [[package]]
